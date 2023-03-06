@@ -22,21 +22,27 @@ https://github.com/approov/quickstart-mendix-react-native.git
 
 Now, open Mendix Studio Pro and in the `Open App` pop-up select the option `Open App Locally` and select the file `ApprooovDemo.mpr` at the root of `example/approov-mendix-studio-pro` folder of the cloned repo.
 
-<IMAGE_HERE>
+![Open Mendix App in the Mendix Studio Pro](/readme-images/open-app.png)
 
+Next, from the top menu bar select `App > Build Native Mobile App`:
 
-Next, from the top menu bar select `App > Build Native Mobile App` and in the pop-up window select `Build type` from the left pane and then on `1.` configure the directory where you want to save and configure your native mobile app for Android and iOS, for example `C:\Users\User1\AndroidStudioProjects\YourMendixApp`. In `2.` deselect any option that is currently selected.
+![Open the menu Build native mobile app in Mendix Studio Pro](/readme-images/build-native-mobile-app.png)
 
-<IMAGE_HERE>
+Now, in the pop-up window select the `Configure app for local building`:
 
-Now, from the left pane select `Configure app locally` and then in `App configuration` enter a version number, for example `0.2.0`. For now you don't need to change the `Runtime URL` field.
+![Configure app for local building popup](/readme-images/configure-app-for-local-build.png)
 
-<IMAGE_HERE>
+Next, in the pop-up window select `Build type` from the left pane and then on `1.` configure the directory where you want to save and configure your native mobile app for Android and iOS, for example `C:\Users\User1\AndroidStudioProjects\YourMendixApp`. In `2.` deselect any option that is currently selected:
 
-Next, hit the `Configure locally` button on the the bottom right and wait for the build process to finish. 
+![In the open popup configure the the build type for the native mobile app](/readme-images/build-type.png)
 
-<IMAGE_HERE>
+Now, from the left pane select `Configure app locally` and then in `App configuration` enter a version number, for example `0.2.0`. For now you don't need to change the `Runtime URL` field:
 
+![In the pop-up configure the app version number](/readme-images/configure-app-version-number.png)
+
+Next, hit the `Configure locally` button on the the bottom right and wait for the build process to finish:
+
+![Popup with the message that the build finished](/readme-images/build-finished.png)
 
 Finally, when the build process is finished you need to switch to Android Studio or Xcode to continue following this example.
 
@@ -47,15 +53,19 @@ Now that you have built a Mendix native mobile app project its time to build and
 
 When the mobile app launches you will see first a login screen:
 
-<IMAGE_HERE>
+![Login screen](/readme-images/login-screen.png)
 
 Hit that `Login` button and you should see the `Counter` screen from where you are free to play with incrementing the counter from the client and from the server. The API calls being made to the Mendix Backend Runtime are not secured with Approov at this stage, therefore they can be intercepted and manipulated with a MitM attack and/or with an Instrumentation Framework.
 
-<IMAGE_HERE>
+![Counter screen](/readme-images/counter-screen.png)
 
-You can also explore the `Countries` tab and if you click on it you will see this list of countries:
+You can also explore the `Countries` tab and if you click on it you will see an empty screen:
 
-<IMAGE_HERE>
+![Empty countries screen](/readme-images/empty-countries-list.png)
+
+If you click in the button at the bottom you get this list of countries:
+
+![Countries screen](/readme-images/countries-list.png)
 
 This list is retrieved from a third-party by doing an API request to `https://restcountries.com/v3.1/all`, that it's a free service not requiring an API key to access it, but if an API key would be required to access such a service and you would have to pay for it, then an attacker can have your API key extracted from the mobile app and have it reused outside of it. For example, in another app, on a bot, or even in manual API requests made with cURL or other tools, but you may only know about this API key leak when paying the bill or being rate limited by the third-party API service provider.
 
@@ -104,11 +114,7 @@ Tokens for this domain will be automatically signed with the specific secret for
 
 ## MODIFY THE APP TO USE APPROOV
 
-First, you need to rebuild your Mobile native mobile app project from Mendix Studio Pro by following again the steps at [BUILDING THE MENDIX NATIVE MOBILE APP](#building-the-mendix-native-mobile-app) but this time you need to change the Mendix Runtime URL to point to the reverse proxy at `https://mendix.approov.workers.dev ` to have the mobile app going through the reverse proxy to have the Approov token checked and to only forward API requests to the Mendix Backend Runtime on a successfully Approov token validation.
-
-Now that you have rebuild the Mendix native mobile app project the `ApproovService` React Native package will handle any API request in the same way as usual in your mobile app, but with the additional features provided by the `Approov SDK`. The only additional requirement when using the `ApproovService` is providing an initialization string during object creation.
-
-Open the `main.js` native theme file on your Mendix native mobile app folder, for example `C:\Users\User1\AndroidStudioProjects\YourMendixApp\theme\native\main.js`, and then comment out and uncomment the lines as instructed on the file, and the final code should look like this:
+Open the `Styling\native\main.js` native theme file on your Mendix Studio Pro, and then comment out and uncomment the lines as instructed on the file, and the final code should look like this:
 
 ```js
 // *** COMMENT OUT THE LINE BELOW TO USE APPROOV ***
@@ -122,7 +128,8 @@ try {
     ApproovService.initialize("<enter-your-config-string-here>")
 } catch (e) {
     // Approov doesn't attest mobile apps that are running against an API backend in localhost.
-    // The try/catch block will allow you to continue developing as usual with your localhost instance of th eMEndinx BAckend Runtime. 
+    // The try/catch block will allow you to continue developing as usual with your localhost 
+    // instance of the Mendix Backend Runtime. 
     // You want or not to add some logging here. 
     // If you decide to show a pop-up to the user then don't use the exception message.
 }
@@ -132,15 +139,15 @@ export {ApproovService}
 
 The `<enter-your-config-string-here>` is a custom string that configures your Approov account access. This will have been provided in your Approov onboarding email. This initializes Approov when the app is first created. Please note that you must provide the `Config String` every time you initialize an `ApproovService` but the underlying SDK only actually initializes the library once. While the string isn't a secret you shouldn't commit it into git.
 
-<IMAGE_HERE>
+Next, you need to rebuild your Mobile native mobile app project from Mendix Studio Pro by following again the steps at [BUILDING THE MENDIX NATIVE MOBILE APP](#building-the-mendix-native-mobile-app) but this time you need to change the Mendix Runtime URL to point to the reverse proxy at `https://mendix.approov.workers.dev ` to have the mobile app going through the reverse proxy to have the Approov token checked and to only forward API requests to the Mendix Backend Runtime on a successfully Approov token validation:
+
+![Configure the app version number with Approov integrated](/readme-images/configure-app-version-with-approov.png)
+
+Now that you have rebuild the Mendix native mobile app project the `ApproovService` React Native package will handle any API request in the same way as usual in your mobile app, but with the additional features provided by the `Approov SDK`. The only additional requirement when using the `ApproovService` is providing an initialization string during object creation.
 
 Depending on the native platform you are targeting, Android, iOS or both, you need to build the Mendix native mobile app in Android Studio and/or Xcode. This will ensure that the APK for Android and the IPA file for iOS are built and up to date with the latest changes, the addition of the Approov Service.
 
-Now, try to run the mobile app and you should be present with an error:
-
-<IMAGE_HERE>
-
-This is because now the App is protected with Approov, but once it isn't yet registered with the Approov Cloud Service it wasn't able to attest successfully, therefore it's getting invalid Approov tokens and consequently the API request is being denied at `https://mendix.approov.workers.dev`. To fix this its necessary to register the APK and/or IPA file with the Approov Cloud Service, which we will in the next step.
+Next, try to run the mobile app and you should be present with an error. This is because now the App is protected with Approov, but once it isn't yet registered with the Approov Cloud Service it wasn't able to attest successfully, therefore it's getting invalid Approov tokens and consequently the API request is being denied at `https://mendix.approov.workers.dev`. To fix this its necessary to register the APK and/or IPA file with the Approov Cloud Service, which we will in the next step.
 
 
 ## REGISTER YOUR APP WITH APPROOV
@@ -159,8 +166,6 @@ Note, some versions of Android Studio save the app in `app\build\intermediates\a
 ## MENDIX APP WITH APPROOV API PROTECTION
 
 Now, without making any changes to the mobile app, relaunch it again and then play around with incrementing the counter or just by loading the Countries list, and everything should work as usual.
-
-<IMAGE_HERE>
 
 This means that the app is getting a validly signed Approov token to present to the shapes endpoint.
 

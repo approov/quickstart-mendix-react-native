@@ -70,7 +70,8 @@ try {
     ApproovService.initialize("<enter-your-config-string-here>")
 } catch (e) {
     // Approov doesn't attest mobile apps that are running against an API backend in localhost.
-    // The try/catch block will allow you to continue developing as usual with your localhost instance of th eMEndinx BAckend Runtime. 
+    // The try/catch block will allow you to continue developing as usual with your localhost 
+    // instance of the Mendix Backend Runtime. 
     // You want or not to add some logging here. 
     // If you decide to show a pop-up to the user then don't use the exception message.
 }
