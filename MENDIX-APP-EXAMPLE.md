@@ -162,6 +162,16 @@ Note, some versions of Android Studio save the app in `app\build\intermediates\a
 
 > **IMPORTANT:** The registration takes up to 30 seconds to propagate across the Approov Cloud Infrastructure, therefore don't try to run the app again before this time has elapsed. During development of your app you can ensure your device [always passes](https://approov.io/docs/latest/approov-usage-documentation/#adding-a-device-security-policy) so you do not have to register the APK each time you modify it.
 
+[Managing Registrations](https://approov.io/docs/latest/approov-usage-documentation/#managing-registrations) provides more details for app registrations, especially for releases to the Play Store. Note that you may also need to apply specific [Android Obfuscation](https://approov.io/docs/latest/approov-usage-documentation/#android-obfuscation) rules for your app when releasing it.
+
+For iOS it is necessary to explicitly build an `.ipa` in order to register it with Approov:
+
+```console
+approov registration -add build\ios\ipa\YourApp.ipa
+```
+
+Remember if you are using bitcode then you must also use the `-bitcode` option with the registration.
+
 
 ## MENDIX APP WITH APPROOV API PROTECTION
 
