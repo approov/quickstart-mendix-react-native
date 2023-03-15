@@ -134,7 +134,7 @@ try {
     // If you decide to show a pop-up to the user then don't use the exception message.
 }
 
-export {ApproovService}
+export {}
 ```
 
 The `<enter-your-config-string-here>` is a custom string that configures your Approov account access. This will have been provided in your Approov onboarding email. This initializes Approov when the app is first created. Please note that you must provide the `Config String` every time you initialize an `ApproovService` but the underlying SDK only actually initializes the library once. While the string isn't a secret you shouldn't commit it into git.
