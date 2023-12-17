@@ -2,12 +2,11 @@
 
 This quickstart is written specifically for Android and iOS apps that are implemented using [Mendix](https://mendix.com/) that uses [React Native](https://reactnative.dev) under the hood. If this is not your situation then please check if there is a more relevant quickstart guide available.
 
-This quickstart provides the basic steps for integrating Approov into your MEndix native mobile app. A more detailed step-by-step guide using a [Mendix App Example](/MENDIX-APP-EXAMPLE.md) is also available.
+This page provides all the steps for integrating Approov into your app. Additionally, a step-by-step tutorial guide using our [Mendix App Example](/MENDIX-APP-EXAMPLE.md) is also available.
 
 Note that the minimum OS requirement for iOS is 10 and for Android the minimum SDK version is 21 (Android 5.0). You cannot use Approov in apps that need to support OS versions older than this.
 
 To follow this guide you should have received an onboarding email for a trial or paid Approov account.
-
 
 ## HOW APPROOV AND MENDIX FIT TOGETHER
 

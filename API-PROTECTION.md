@@ -2,7 +2,6 @@
 
 You should use this option if you wish to protect access to your APIs using an Approov token. We recommend this approach where it is possible to modify the backend API implementation to perform the token verification. 
 
-
 ## REQUIREMENTS
 
 * [Approov CLI](https://approov.io/docs/latest/approov-cli-tool-reference/) - please follow the [Installation](https://approov.io/docs/latest/approov-installation/) instructions.
@@ -15,9 +14,7 @@ You should use this option if you wish to protect access to your APIs using an A
     + [Mulesoft API Gateway](https://github.com/approov/quickstart-mulesoft-api-gateway)
     + [Kong API Gateway](https://github.com/approov/quickstart-kong_approov-plugin)
 
-
 You will need to implement a proxy in addition to the steps in this frontend guide. If none of the proxy is an option for you then plase contact us to discuss another approach.
-
 
 ## ADDING API DOMAINS
 
@@ -29,29 +26,39 @@ approov api -add your.api.domain.com
 
 Approov tokens will then be added automatically to any requests to that domain (using the `Approov-Token` header, by default).
 
-Note that this will also add a public key certicate pin for connections to the domain to ensure that no Man-in-the-Middle attacks on your app's communication are possible. Please read [Managing Pins](https://approov.io/docs/latest/approov-usage-documentation/#public-key-pinning-configuration) to understand this in more detail.
+Note that this will use [Managed Trust Roots](https://approov.io/docs/latest/approov-usage-documentation/#managed-trust-roots) to ensure that no Man-in-the-Middle attacks on your app's communication are possible.
 
 > **NOTE:** By default a symmetric account key is used to sign the Approov token (HS256 algorithm), so that all API domains will share the same signing secret. Alternatively, it is possible to use a [keyset key](https://approov.io/docs/latest/approov-usage-documentation/#managing-key-sets) which may differ for each API domain and for which a wide range of different signing algorithms and key types are available. This requires you to first [add a new key](https://approov.io/docs/latest/approov-usage-documentation/#adding-a-new-key), and then specify it when [adding each API domain](https://approov.io/docs/latest/approov-usage-documentation/#keyset-key-api-addition). Note that this will impact how you verify the token on your API backend.
 
+## ADD YOUR SIGNING CERTIFICATE TO APPROOV
+You should add the signing certificate used to sign apps so that Approov can recognize your app as being official.
 
-## REGISTERING APPS
+Codesigning must also be enabled, if you need assistance please check [Microsoft's codesigning support](https://docs.microsoft.com/en-us/xamarin/ios/deploy-test/provisioning/) or [Android deploy signing](https://docs.microsoft.com/en-us/xamarin/android/deploy-test/signing/?tabs=macos). Make sure you have selected the correct project (Shapes.App.iOS), build mode (Release) and target device (Generic Device) settings.
 
-In order for Approov to recognize the app as being valid it needs to be registered with the service. Change directory to the top level of your app project and then register the app with Approov:
+### Android
+Add the local certificate used to sign apps in Android Studio. The following assumes it is in PKCS12 format:
 
-For Android:
-
-```console
-approov registration -add C:\Users\User1\AndroidStudioProjects\path\to\apk
+```
+approov appsigncert -add C:\Users\MyUser\.android\debug.keystore -storePassword android -autoReg
 ```
 
-For iOS it is necessary to explicitly build an `.ipa` in order to register it with Approov:
+See [Android App Signing Certificates](https://approov.io/docs/latest/approov-usage-documentation/#android-app-signing-certificates) if your keystore format is not recognized or if you have any issues adding the certificate. This also provides information about adding certificates for when releasing to the Play Store. Note also that you need to apply specific [Android Obfuscation](https://approov.io/docs/latest/approov-usage-documentation/#android-obfuscation) rules when creating an app release.
 
-```console
-approov registration -add build\ios\ipa\YourApp.ipa
+### iOS
+These are available in your Apple development account portal. Go to the initial screen showing program resources:
+
+![Apple Program Resources](readme-images/program-resources.png)
+
+Click on `Certificates` and you will be presented with the full list of development and distribution certificates for the account. Click on the certificate being used to sign applications from your particular Xcode installation and you will be presented with the following dialog:
+
+![Download Certificate](readme-images/download-cert.png)
+
+Now click on the `Download` button and a file with a `.cer` extension is downloaded, e.g. `development.cer`. Add it to Approov with:
+
+```
+approov appsigncert -add development.cer -autoReg
 ```
 
-Remember if you are using bitcode then you must also use the `-bitcode` option with the registration.
+If it is not possible to download the correct certificate from the portal then it is also possible to [add app signing certificates from the app](https://approov.io/docs/latest/approov-usage-documentation/#adding-apple-app-signing-certificates-from-app).
 
-> **IMPORTANT:** The registration takes about 30 seconds to propagate across the Approov Cloud Infrastructure, therefore don't try to run the app again before this time has elapsed. During development of your app you can ensure the device [always passes](https://approov.io/docs/latest/approov-usage-documentation/#adding-a-device-security-policy) so you do not have to register the APK each time you modify it.
-
-[Managing Registrations](https://approov.io/docs/latest/approov-usage-documentation/#managing-registrations) provides more details for app registrations, especially for releases to the Play Store. Note that you may also need to apply specific [Android Obfuscation](https://approov.io/docs/latest/approov-usage-documentation/#android-obfuscation) rules for your app when releasing it.
+> **IMPORTANT:** Apps built to run on the iOS simulator are not code signed and thus auto-registration does not work for them. In this case you can consider [forcing a device ID to pass](https://approov.io/docs/latest/approov-usage-documentation/#forcing-a-device-id-to-pass) to get a valid attestation.
