@@ -4,7 +4,7 @@ This quickstart is written specifically for Android and iOS apps that are implem
 
 This page provides all the steps for integrating Approov into your app. Additionally, a step-by-step tutorial guide using our [Mendix App Example](/MENDIX-APP-EXAMPLE.md) is also available.
 
-Note that the minimum OS requirement for iOS is 10 and for Android the minimum SDK version is 21 (Android 5.0). You cannot use Approov in apps that need to support OS versions older than this.
+Note that the minimum OS requirement for iOS is 13.4 and for Android the minimum SDK version is 21 (Android 5.0). You cannot use Approov in apps that need to support OS versions older than this.
 
 To follow this guide you should have received an onboarding email for a trial or paid Approov account.
 
@@ -14,7 +14,7 @@ To follow this guide you should have received an onboarding email for a trial or
 
 The Mendix App will include the Approov SDK to secure any API requests made by the mobile app to the Mendix Runtime. The Approov SDK will attest the mobile app with the Approov Cloud service and will receive a JWT that is then added by the Approov SDK to the `Approov-Token` header of each API request. The Mendix App will have the Runtime URL pointing to a reverse proxy (Cloudflare worker on the diagram), and when the Approov worker receives an incoming request it will look for the presence of an `Approov-Token` in the headers of the request, and if it succeeds it will then verify its correctly signed and not expired and will forward the API request to the Mendix Runtime, otherwise an error response its returned. The Mendix Runtime on its turn will then make the API requests with the API keys it has stored on their cloud, not on the Mendix App, that is free of any hard-coded secrets and secured by Approov.
 
-While Cloudflare its used here as an example of a Reverse Proxy you can use any other one of your choice, provided you have the ability to add some code to perform a JWT token check. See more details on the [API-PROTECTION.md](/API-PROTECTION.md#requirements) requirements section.
+While Cloudflare its used here as an example of a Reverse Proxy you can use any other one of your choice, provided you have the ability to add some code to perform a JWT token check. See more details in the [API-PROTECTION](/API-PROTECTION.md#requirements) requirements section.
 
 
 ## ADDING THE APPROOV SERVICE DEPENDENCY TO THE MENDIX MOBILE APP
@@ -33,14 +33,11 @@ The `package.json` file at the root of your Mendix native mobile app project sho
 
 ```json
  "dependencies": {
-    "@approov/react-native-approov": "3.1.1",
+    "@approov/react-native-approov": "3.2.0",
     "@mendix/native": "~1.0.0",
     ...
  },
 ```
-
-> **ALERT:** Don't use an Approov version below `3.1.1` on your Mendix Mobile App, otherwise it will not work.
-
 
 ### ANDROID MANIFEST CHANGES
 

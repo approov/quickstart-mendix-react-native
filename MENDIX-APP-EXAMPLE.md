@@ -86,13 +86,11 @@ The `package.json` file at the root of your Mendix native mobile app project sho
 
 ```json
  "dependencies": {
-    "@approov/react-native-approov": "3.1.1",
+    "@approov/react-native-approov": "3.2.0",
     "@mendix/native": "~1.0.0",
     ...
  },
 ```
-
-> **ALERT:** Don't use an Approov version below `3.1.1` on your Mendix Mobile App, otherwise it will not work.
 
 ## ENSURE THE API IS ADDED
 
